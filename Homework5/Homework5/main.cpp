@@ -29,9 +29,9 @@
 #include <iomanip>
 #include <cstdlib>
 #include <string>
-//#include "nodewithparent.h"
-//#include "binarytree.h"
 using namespace std;
+
+void print_menu();
 
 // nodewithparent.h
 class Node {
@@ -389,9 +389,7 @@ int main () {
     BST TREE;
     //Node* test;
     // Create inorder Binary treee
-    cout << "To create your Binary tree, use the menu below." << endl << endl;
-    cout << "Enter your operation using the capital letter shown in your selection." << endl;
-    cout << "Add a node, Display a node, Show sorted list, display Tree, Help, Exit: " << endl;
+    print_menu();
     while (!cin.eof() && op != 'E' && op != 'e')  // build binary tree in this loop
     { cout << "Enter your operation: ";
         cin >> op;
@@ -437,20 +435,50 @@ int main () {
             }
             case 'H': case 'h':
             { cout << "Enter your operation using the capital letter shown in your selection." << endl;
-                cout << "Add a node, Display a node, Show sorted list, display Tree, Help, Exit" << endl;
+                print_menu();
                 break;
+            }
+            case 1: {
+                cout << "1 Add a Name to the Array" << endl;
+            }
+            case 2: {
+                cout << "2 Print Ascending Sorted Array" << endl;
+            }
+            case 3: {
+                cout << "3 Print Middle Point of Array" << endl;
+            }
+            case 4: {
+                cout << "4 Print Array organized for width balanced tree" << endl;
+            }
+            case 5: {
+                cout << "5 Delete all dynamic arrays" << endl;
+            }
+            case 6: {
+                cout << "6 Create Binary Tree based on width balanced array" << endl;
             }
             case 'E': case 'e':
             { break;
             }
             default:
             { cout << "Invalid operation. Try again!" << endl;
-                cout << "Operations are " << endl;
-                cout << "Add a node, Display a node, Show sorted list, display Tree, Help, Exit" << endl;
+                print_menu();
                 break;
             }
         }
     }
     system("PAUSE");
     return EXIT_SUCCESS;
+}
+
+void print_menu(){
+    cout << "To create your Binary tree, use the menu below." << endl << endl;
+    cout << "Enter your operation using the capital letter shown in your selection." << endl;
+    cout << "Add a node\nDisplay a node\nShow sorted list\nTree Display\nHelp\nExit\n" << endl;
+    cout << "Enhanced Options - Select by Number" << endl;
+    cout << "1 Add a Name to the Array" << endl;
+    cout << "2 Print Ascending Sorted Array" << endl;
+    cout << "3 Print Middle Point of Array" << endl;
+    cout << "4 Print Array organized for width balanced tree" << endl;
+    cout << "5 Delete all dynamic arrays" << endl;
+    cout << "6 Create Binary Tree based on width balanced array" << endl << endl;
 }
