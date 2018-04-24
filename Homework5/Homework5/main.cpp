@@ -415,8 +415,7 @@ public:
                 cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
             }
         }
-    
-        
+
         // now sort array // keep this array sorted at all times for immediate reference
     }
     
@@ -433,6 +432,9 @@ public:
         }
     }
     
+    void sort_list(){
+        // Sort the student list.
+    }
     void middle_array(){
         // put the get middle code here, this always uses the original array to get the middle
     }
