@@ -31,8 +31,6 @@
 #include <string>
 using namespace std;
 
-void print_menu();
-
 // nodewithparent.h
 class Node {
 private:
@@ -381,12 +379,95 @@ void BST::rotateLeft(Node* subRoot) //Rotates Nodes left, symmetrical with Rotat
     }
 }
 
+// Added Functions and Classes:
+void print_menu();
+
+class STUDENT_LIST {
+public:
+    STUDENT_LIST(){}
+    ~STUDENT_LIST(){}
+    
+    void add_student( string name ) {
+        if ( 0 == student_count ) {
+            string *tempArray;
+            student_count = 1;
+            tempArray     =  new string[ student_count ];
+            if ( nullptr != tempArray ) {
+                tempArray[0]  = name;
+                students  = tempArray;
+            }
+            else {
+                cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
+            }
+        }
+        else {
+            string *tempArray;
+            tempArray = new string[ student_count + 1 ];
+            if ( nullptr != tempArray ) {
+                for ( int i = 0; i < ( student_count ); i++ ) { // Use the original student size to loop.
+                    tempArray[i] = students[i];
+                }
+                tempArray[ student_count ] = name; // Don't increment yet because 0 indexing.
+                students = tempArray;
+                student_count++; // Final step increment student count.
+            }
+            else {
+                cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
+            }
+        }
+    
+        
+        // now sort array // keep this array sorted at all times for immediate reference
+    }
+    
+    void list_students(){
+        cout << "Studio: " << students[0] << endl;
+        if ( 0 == student_count ) {
+            cout << endl << "No Students have been added." << endl;
+        }
+        else {
+            cout << endl << "Student List" << endl;
+            for ( int i = 0; i < student_count; i++ ) {
+                cout << i << "  " << students[i] << endl;
+            }
+        }
+    }
+    
+    void middle_array(){
+        // put the get middle code here, this always uses the original array to get the middle
+    }
+    
+    void create_width_array(){
+        // create a width array based on middle array
+    }
+    
+    void create_binary_tree(){
+        // using the width array
+        // delete existing binary tree ?
+        // add items to binary tree
+    }
+    
+    void better_tree_print(){
+        // make a better print function for tree in the tree
+    }
+private:
+    string *students;
+    int student_count = 0;
+};
+
+// End Added functions and Classes
+
+
 // BinaryTreeApplication.cpp
 int main () {
     string x;
     char op = ' ';
     char confirm = ' ';
     BST TREE;
+    
+    // Added Variables
+    STUDENT_LIST STUDENTS;
+    string name;
     //Node* test;
     // Create inorder Binary treee
     print_menu();
@@ -424,37 +505,49 @@ int main () {
                 break;
             }
             case 'T': case 't':
-            {if ( TREE.getCount ())
-            { cout << endl << "Display Tree:" << endl;
-                TREE.treeDisplayWrapper ();
-            }
-            else
-                cout << endl << "Tree is empty. No entries found.";
-                cout << endl;
-                break;
-            }
+                {if ( TREE.getCount ())
+                { cout << endl << "Display Tree:" << endl;
+                    TREE.treeDisplayWrapper ();
+                }
+                else
+                    cout << endl << "Tree is empty. No entries found.";
+                    cout << endl;
+                    break;
+                }
             case 'H': case 'h':
-            { cout << "Enter your operation using the capital letter shown in your selection." << endl;
-                print_menu();
+                { cout << "Enter your operation using the capital letter shown in your selection." << endl;
+                    print_menu();
+                    break;
+                }
+            case '1':
+                {
+                    cout << "Enter student name: ";
+                    cin >> name;
+                    if ( !cin.eof() ) {
+                        STUDENTS.add_student( name );
+                    }
+                    break;
+                }
+            case '2':
+                {
+                    STUDENTS.list_students();
+                    break;
+                }
+            case '3': {
+                cout << "3 Print Middle Point of Array" << endl;
                 break;
             }
-            case 1: {
-                cout << "1 Add a Name to the Array" << endl;
-            }
-            case 2: {
-                cout << "2 Print Ascending Sorted Array" << endl;
-            }
-            case 3: {
-                cout << "3 Print Middle Point of Array" << endl;
-            }
-            case 4: {
+            case '4': {
                 cout << "4 Print Array organized for width balanced tree" << endl;
+                break;
             }
-            case 5: {
+            case '5': {
                 cout << "5 Delete all dynamic arrays" << endl;
+                break;
             }
-            case 6: {
+            case '6': {
                 cout << "6 Create Binary Tree based on width balanced array" << endl;
+                break;
             }
             case 'E': case 'e':
             { break;
