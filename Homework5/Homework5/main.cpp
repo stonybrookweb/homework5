@@ -29,6 +29,8 @@
 #include <iomanip>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
+#include <vector>
 using namespace std;
 
 // nodewithparent.h
@@ -415,9 +417,7 @@ public:
                 cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
             }
         }
-    
-        
-        // now sort array // keep this array sorted at all times for immediate reference
+        sort( students, students + student_count ); // Keep list sorted at all times.
     }
     
     void list_students(){
@@ -433,26 +433,118 @@ public:
         }
     }
     
-    void middle_array(){
-        // put the get middle code here, this always uses the original array to get the middle
+    void get_middle( ){
+        int nr;
+        int level=0;
+        nr = student_count;
+        if (nr > 2) {
+//            cout << "Level" << "   Person" << endl;
+            FindMiddle(1, nr, (level + 1), nr, 1);
+        }
+        else {
+            cout << "No middle with 2 or less items." << endl;
+        }
     }
     
     void create_width_array(){
-        // create a width array based on middle array
+        // create a width array based on middle vector.
+        int level = 1;
+        int max_level = 1;
+        
+        for( int i = 0; i < middle_vector.size(); i++ ){
+            if( max_level < middle_vector[i][1] ){
+                max_level = middle_vector[i][1];
+            }
+        }
+        
+        while( level <= max_level ) {
+            for( int i = 0; i < middle_vector.size(); i++ ) {
+                if ( level == middle_vector[i][1] ) {
+                    tree_sorted_vector.push_back( students[ middle_vector[i][0] ] );
+                }
+            }
+            level++;
+        }
     }
     
-    void create_binary_tree(){
+    void create_binary_tree( BST *TREE ){
         // using the width array
         // delete existing binary tree ?
         // add items to binary tree
+        for ( int i = 0; i < tree_sorted_vector.size(); i++ ){
+            TREE->addNodeWrapper( tree_sorted_vector[i] );
+        }
     }
     
     void better_tree_print(){
         // make a better print function for tree in the tree
     }
+    
+    void print_middled_vector() {
+//        cout << "Person\tPosition" << endl;
+        for ( int i = 0; i < middle_vector.size(); i++ ){
+            cout << middle_vector[i][0] << "\t" <<  middle_vector[i][1] << endl;
+        }
+    }
+    
+    void print_tree_sorted_vector() {
+        cout << "Person" << endl;
+        for ( int i = 0; i < tree_sorted_vector.size(); i++ ){
+            cout << tree_sorted_vector[i] << endl;
+            
+        }
+    }
+    
 private:
     string *students;
     int student_count = 0;
+    vector <string> tree_sorted_vector;
+    vector<vector< int> > middle_vector;
+    
+    
+    
+    void add_row( int person, int position){
+        vector<int> newrow;
+        newrow.push_back( person);
+        newrow.push_back( position);
+        middle_vector.push_back( newrow );
+    }
+    
+
+    // Code from Professor Maslanka from FindMiddleRB.cpp.
+    // Modified for use in this STUDENT_LIST class.
+    void FindMiddle(int x, int y, int level, int nr, int round) {
+        int mid;
+        
+        if ( abs( x - y ) < 2 ) {
+            
+            if ( x == 1 ) {
+//              cout << "  " << level << "    " << setw(2) << x - 1 << endl;
+                add_row( x - 1, level );
+            }
+            
+            if ( y == nr ) {
+//              cout << "  " << level << "    " << setw(2) << y - 1  << endl;
+                add_row( y - 1, level );
+            }
+            return;
+        }
+        
+        if ( ( y + x ) % 2 ) {
+            mid=(x+y+round)/2;
+//          cout << "  " << level << "    " << setw(2) << mid - 1 << endl;
+            add_row( mid - 1, level );
+        }
+        else {
+            mid = ( x + y ) / 2;
+//          cout << "  " << level << "    " << setw(2) << mid - 1 << endl;
+            add_row( mid - 1, level );
+        }
+        
+        FindMiddle(x,mid,(level+1),nr,-1); // round down left
+        FindMiddle(mid,y,(level+1),nr,1);  // round up right
+        return;
+    }
 };
 
 // End Added functions and Classes
@@ -534,11 +626,14 @@ int main () {
                     break;
                 }
             case '3': {
-                cout << "3 Print Middle Point of Array" << endl;
+                STUDENTS.get_middle();
+                STUDENTS.print_middled_vector();
+                STUDENTS.create_width_array();
                 break;
             }
             case '4': {
-                cout << "4 Print Array organized for width balanced tree" << endl;
+                cout << "Vector sorted for balanced binary tree" << endl;
+                STUDENTS.print_tree_sorted_vector();
                 break;
             }
             case '5': {
@@ -547,6 +642,7 @@ int main () {
             }
             case '6': {
                 cout << "6 Create Binary Tree based on width balanced array" << endl;
+                STUDENTS.create_binary_tree( &TREE );
                 break;
             }
             case 'E': case 'e':
