@@ -512,10 +512,6 @@ public:
         }
     }
     
-    void better_tree_print(){
-        // TODO: make a better print function for tree in the tree.
-    }
-    
     void print_middled_vector() {
         if( 0 < middle_vector.size() ) {
             cout << "\nStudent\tLevel" << endl;
