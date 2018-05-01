@@ -246,7 +246,7 @@ void BST::postInsertionBalance(Node* n)  //Run after every insertion of a Node
 // to balance the tree.  Any imbalances can be dealt with by looking at
 // the parent line to the root of the new Node as described above.
 {
-    cout << "Entering postInsertionBalance" << endl;
+//    cout << "Entering postInsertionBalance" << endl;
     Node* p;
     if (balanceFactor(n) == 2)
     {
@@ -382,46 +382,54 @@ void BST::rotateLeft(Node* subRoot) //Rotates Nodes left, symmetrical with Rotat
 }
 
 // Added Functions and Classes:
+
+// Move All Menu Details to a new function.
 void print_menu();
 
+// Added Class for managing Homework assignment updates.
 class STUDENT_LIST {
 public:
     STUDENT_LIST(){}
     ~STUDENT_LIST(){}
     
     void add_student( string name ) {
-        if ( 0 == student_count ) {
-            string *tempArray;
-            student_count = 1;
-            tempArray     =  new string[ student_count ];
-            if ( nullptr != tempArray ) {
-                tempArray[0]  = name;
-                students  = tempArray;
-            }
-            else {
-                cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
-            }
+        if( tree_created ) {
+            cout << "** Error ** You have already created a tree. Unable to add new names." << endl;
         }
         else {
-            string *tempArray;
-            tempArray = new string[ student_count + 1 ];
-            if ( nullptr != tempArray ) {
-                for ( int i = 0; i < ( student_count ); i++ ) { // Use the original student size to loop.
-                    tempArray[i] = students[i];
+            if ( 0 == student_count ) {
+                string *tempArray;
+                student_count = 1;
+                tempArray     =  new string[ student_count ];
+                if ( nullptr != tempArray ) {
+                    tempArray[0]  = name;
+                    students  = tempArray;
                 }
-                tempArray[ student_count ] = name; // Don't increment yet because 0 indexing.
-                students = tempArray;
-                student_count++; // Final step increment student count.
+                else {
+                    cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
+                }
             }
             else {
-                cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
+                string *tempArray;
+                tempArray = new string[ student_count + 1 ];
+                if ( nullptr != tempArray ) {
+                    for ( int i = 0; i < ( student_count ); i++ ) { // Use the original student size to loop.
+                        tempArray[i] = students[i];
+                    }
+                    tempArray[ student_count ] = name; // Don't increment yet because 0 indexing.
+                    students = tempArray;
+                    student_count++; // Final step increment student count.
+                }
+                else {
+                    cout << "   *** Error Condition *** " << endl << "  Out of heap. " << endl;
+                }
             }
+            sort( students, students + student_count ); // Keep list sorted at all times.
         }
-        sort( students, students + student_count ); // Keep list sorted at all times.
     }
     
     void list_students(){
-        cout << "Studio: " << students[0] << endl;
+        
         if ( 0 == student_count ) {
             cout << endl << "No Students have been added." << endl;
         }
@@ -430,6 +438,22 @@ public:
             for ( int i = 0; i < student_count; i++ ) {
                 cout << i << "  " << students[i] << endl;
             }
+        }
+    }
+    
+    void print_list_width_balanced(){
+        if( tree_created ) {
+            cout << "You have already created a tree with this list: " << endl;
+            print_tree_sorted_vector();
+        }
+        else{
+            middle_vector.clear();
+            get_middle();
+            print_middled_vector();
+            tree_sorted_vector.clear();
+            create_width_array();
+            print_tree_sorted_vector();
+            
         }
     }
     
@@ -442,21 +466,24 @@ public:
             FindMiddle(1, nr, (level + 1), nr, 1);
         }
         else {
-            cout << "No middle with 2 or less items." << endl;
+            cout << "\n** error ** No middle with 2 or less items." << endl;
         }
     }
     
+    // create a width vector based on middle vector.
     void create_width_array(){
-        // create a width array based on middle vector.
+    
         int level = 1;
         int max_level = 1;
         
+        // Determine how many levels exist.
         for( int i = 0; i < middle_vector.size(); i++ ){
             if( max_level < middle_vector[i][1] ){
                 max_level = middle_vector[i][1];
             }
         }
         
+        // Move items to width balances vector based on level.
         while( level <= max_level ) {
             for( int i = 0; i < middle_vector.size(); i++ ) {
                 if ( level == middle_vector[i][1] ) {
@@ -468,30 +495,42 @@ public:
     }
     
     void create_binary_tree( BST *TREE ){
-        // using the width array
-        // delete existing binary tree ?
-        // add items to binary tree
-        for ( int i = 0; i < tree_sorted_vector.size(); i++ ){
-            TREE->addNodeWrapper( tree_sorted_vector[i] );
+        if( ! tree_created ) {
+            middle_vector.clear();
+            get_middle();
+            tree_sorted_vector.clear();
+            create_width_array();
+            for ( int i = 0; i < tree_sorted_vector.size(); i++ ){
+                cout << "Adding " << tree_sorted_vector[i] << " to the tree." << endl;
+                TREE->addNodeWrapper( tree_sorted_vector[i] );
+            }
+            tree_created = true;
+            cout << "Tree Created!" << endl;
+        }
+        else {
+            cout << "** Error ** You can only create a tree once per run of program." << endl;
         }
     }
     
     void better_tree_print(){
-        // make a better print function for tree in the tree
+        // TODO: make a better print function for tree in the tree.
     }
     
     void print_middled_vector() {
-//        cout << "Person\tPosition" << endl;
-        for ( int i = 0; i < middle_vector.size(); i++ ){
-            cout << middle_vector[i][0] << "\t" <<  middle_vector[i][1] << endl;
+        if( 0 < middle_vector.size() ) {
+            cout << "\nStudent\tLevel" << endl;
+            for ( int i = 0; i < middle_vector.size(); i++ ){
+                cout << middle_vector[i][0] << "\t\t" <<  middle_vector[i][1] << endl;
+            }
         }
     }
     
     void print_tree_sorted_vector() {
-        cout << "Person" << endl;
-        for ( int i = 0; i < tree_sorted_vector.size(); i++ ){
-            cout << tree_sorted_vector[i] << endl;
-            
+        if( 0 < tree_sorted_vector.size() ){
+            cout << "\nWidth Balanced Order" << endl;
+            for ( int i = 0; i < tree_sorted_vector.size(); i++ ){
+                cout << tree_sorted_vector[i] << endl;
+            }
         }
     }
     
@@ -500,8 +539,7 @@ private:
     int student_count = 0;
     vector <string> tree_sorted_vector;
     vector<vector< int> > middle_vector;
-    
-    
+    bool tree_created = false;
     
     void add_row( int person, int position){
         vector<int> newrow;
@@ -513,6 +551,8 @@ private:
 
     // Code from Professor Maslanka from FindMiddleRB.cpp.
     // Modified for use in this STUDENT_LIST class.
+    // Subtracted 1 from X & Y so these can be used as zero based array indexes.
+    // Moved results into a function instead of outputting to screen.
     void FindMiddle(int x, int y, int level, int nr, int round) {
         int mid;
         
@@ -547,7 +587,7 @@ private:
     }
 };
 
-// End Added functions and Classes
+// End Added functions and Classes.
 
 
 // BinaryTreeApplication.cpp
@@ -557,10 +597,11 @@ int main () {
     char confirm = ' ';
     BST TREE;
     
-    // Added Variables
+    // Added Variables.
     STUDENT_LIST STUDENTS;
     string name;
-    //Node* test;
+    // End Added Variables.
+    
     // Create inorder Binary treee
     print_menu();
     while (!cin.eof() && op != 'E' && op != 'e')  // build binary tree in this loop
@@ -626,22 +667,11 @@ int main () {
                     break;
                 }
             case '3': {
-                STUDENTS.get_middle();
-                STUDENTS.print_middled_vector();
-                STUDENTS.create_width_array();
+                STUDENTS.print_list_width_balanced();
                 break;
             }
+
             case '4': {
-                cout << "Vector sorted for balanced binary tree" << endl;
-                STUDENTS.print_tree_sorted_vector();
-                break;
-            }
-            case '5': {
-                cout << "5 Delete all dynamic arrays" << endl;
-                break;
-            }
-            case '6': {
-                cout << "6 Create Binary Tree based on width balanced array" << endl;
                 STUDENTS.create_binary_tree( &TREE );
                 break;
             }
@@ -666,8 +696,6 @@ void print_menu(){
     cout << "Enhanced Options - Select by Number" << endl;
     cout << "1 Add a Name to the Array" << endl;
     cout << "2 Print Ascending Sorted Array" << endl;
-    cout << "3 Print Middle Point of Array" << endl;
-    cout << "4 Print Array organized for width balanced tree" << endl;
-    cout << "5 Delete all dynamic arrays" << endl;
-    cout << "6 Create Binary Tree based on width balanced array" << endl << endl;
+    cout << "3 Print name middle points and print names sorted." << endl;
+    cout << "4 Create Binary Tree based on width balanced array" << endl << endl;
 }
